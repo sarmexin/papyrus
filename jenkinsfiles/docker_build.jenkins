@@ -4,20 +4,31 @@ properties([disableConcurrentBuilds()])
 
 pipeline {
     agent any
+    environment {
+        mavenHome = tool 'jenkins-maven'
+    }
+    tools {
+        jdk 'java-17'
+    }
     options {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
     stages {
-        stage('test step') {
+        stage('Build') {
             steps {
-                echo "==================== start test step ===================="
+                bat "mvn clean install -DskipTests"
+            }
+        }
+        stage('Test') {
+            steps {
+                bat "mvn test"
             }
         }
         stage('create docker image') {
             steps {
                 echo "==================== start build image ===================="
-                dir ('docker/toolbox') {
+                dir('docker/toolbox') {
                     sh "docker build ."
                 }
             }
