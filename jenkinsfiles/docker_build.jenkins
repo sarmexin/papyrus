@@ -24,7 +24,6 @@ pipeline {
         }
         stage('create docker container') {
             steps {
-                echo "==================== stop container ===================="
                 echo "==================== create docker container and run ===================="
                 sh "docker run -d -p 8090:8090 --name papyrusapp papyrus:latest"
             }
