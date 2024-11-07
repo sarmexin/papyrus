@@ -15,8 +15,8 @@ pipeline {
             steps {
                 echo "==================== start build image ===================="
                 dir('/var/lib/jenkins/workspace/build_app') {
-                    sh "docker stop papyrus"
-                    sh "docker rm papyrus"
+//                    sh "docker stop papyrus"
+//                    sh "docker rm papyrus"
                     sh "docker build . --tag papyrus:latest"
                 }
                 echo "==================== end build image ===================="
