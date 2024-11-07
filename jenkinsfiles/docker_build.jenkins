@@ -15,8 +15,13 @@ pipeline {
             steps {
                 echo "==================== start build image ===================="
                 dir('/var/lib/jenkins/workspace/build_app') {
-                    sh "docker build ."
+                    sh "docker build . --tag papyrus:latest"
                 }
+                echo "==================== end build image ===================="
+            }
+            steps {
+                echo "==================== create docker container and run ===================="
+                sh "docker run -d -p 8090:8090 --name papyrusapp papyrus:latest"
             }
         }
     }
