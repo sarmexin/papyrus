@@ -20,12 +20,10 @@ pipeline {
                 echo "==================== end build image ===================="
             }
         }
-        stage ('create docker container') {
+        stage('create docker container') {
             steps {
-                step {
-                    echo "==================== create docker container and run ===================="
-                    sh "docker run -d -p 8090:8090 --name papyrusapp papyrus:latest"
-                }
+                echo "==================== create docker container and run ===================="
+                sh "docker run -d -p 8090:8090 --name papyrusapp papyrus:latest"
             }
         }
     }
