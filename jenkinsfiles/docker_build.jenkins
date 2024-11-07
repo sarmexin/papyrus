@@ -15,7 +15,7 @@ pipeline {
             steps {
                 echo "==================== start build image ===================="
                 dir('/var/lib/jenkins/workspace/build_app') {
-//                    sh "docker rmi papyrus"
+                    sh "docker rmi papyrus"
                     sh "docker build . --tag papyrus:latest"
                 }
                 echo "==================== end build image ===================="
@@ -24,8 +24,8 @@ pipeline {
         stage('create docker container') {
             steps {
                 echo "==================== stop container ===================="
-//                sh "docker stop papyrus"
-//                sh "docker rm papyrus"
+                sh "docker stop papyrus"
+                sh "docker rm papyrus"
                 echo "==================== create docker container and run ===================="
                 sh "docker run -d -p 8090:8090 --name papyrusapp papyrus:latest"
             }
