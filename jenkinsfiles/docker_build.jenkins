@@ -13,14 +13,19 @@ pipeline {
     stages {
         stage('create docker image') {
             steps {
-                echo "==================== start build image ===================="
+                echo "==================== start build docker image ===================="
                 dir('/var/lib/jenkins/workspace/build_app') {
                     sh "docker kill papyrusapp"
                     sh "docker rm  papyrusapp"
                     sh "docker rmi papyrus"
                     sh "docker build . --tag sarmexin/papyrus:latest"
                 }
-                echo "==================== end build image ===================="
+            }
+        }
+        stage ('send image to dockerhub') {
+            steps {
+                echo "==================== send image to dockerhub ===================="
+                sh "docker push sarmexin/papyrus"
             }
         }
         stage('create docker container') {
