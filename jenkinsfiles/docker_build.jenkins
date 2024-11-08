@@ -4,13 +4,9 @@ properties([disableConcurrentBuilds()])
 
 pipeline {
     environment {
-        imagename = "sarmexin/papyrus"
+        registry = "sarmexin/papyrus"
+        registryCredential = 'dockerhub_id'
         dockerImage = ''
-        containerName = 'papyrusapp'
-        dockerHubCredentials = 'admin'
-//        registry = "sarmexin/papyrus"
-//        registryCredential = 'dockerhub_id'
-//        dockerImage = ''
     }
 
     agent any
@@ -25,9 +21,9 @@ pipeline {
             steps {
                 echo "==================== start build docker image ===================="
                 dir('/var/lib/jenkins/workspace/build_app') {
-                    sh "docker kill papyrusapp"
-                    sh "docker rm  papyrusapp"
-                    sh "docker rmi sarmexin/papyrus"
+                    sh "docker kill papyrusapp || tru"
+                    sh "docker rm  papyrusapp || tru"
+                    sh "docker rmi sarmexin/papyrus || tru"
                     sh "docker build . --tag sarmexin/papyrus:latest"
                 }
             }
@@ -35,16 +31,9 @@ pipeline {
         stage('send image to dockerhub') {
             steps {
                 echo "==================== send image to dockerhub ===================="
-//                script {
-//                    docker.withRegistry('', registryCredential) {
-//                        dockerImage.push()
-//                    }
-//                sh "docker push sarmexin/papyrus"
-                // Use Jenkins credentials for Docker Hub login
-                withCredentials([usernamePassword(credentialsId: dockerHubCredentials, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-
-                    sh "docker push ${imagename}:latest"
+                // Публикуем образ в Docker Hub
+                docker.withRegistry('https://index.docker.io/v1/', 'srmexin', 'SPG322132###') {
+                    docker.image('sarmexin/papyrus').push('latest')
                 }
             }
         }
