@@ -39,7 +39,7 @@ pipeline {
                 }
             }
         }
-        stage('create docker container') {
+        stage('create & start container on server') {
             steps {
                 echo "==================== create & start container ==================== "
                 sh "docker run -d -p 8090:8090 --name papyrusapp sarmexin/papyrus:latest"
