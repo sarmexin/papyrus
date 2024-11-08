@@ -31,9 +31,11 @@ pipeline {
         stage('send image to dockerhub') {
             steps {
                 echo "==================== send image to dockerhub ===================="
-                // Публикуем образ в Docker Hub
-                docker.withRegistry('', registryCredential) {
-                    docker.image('sarmexin/papyrus').push('latest')
+                script {
+                    // Публикуем образ в Docker Hub
+                    docker.withRegistry('', registryCredential) {
+                        docker.image('sarmexin/papyrus').push('latest')
+                    }
                 }
             }
         }
