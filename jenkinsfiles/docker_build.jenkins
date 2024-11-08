@@ -4,9 +4,13 @@ properties([disableConcurrentBuilds()])
 
 pipeline {
     environment {
-        registry = "sarmexin/papyrus"
-        registryCredential = 'dockerhub_id'
+        imagename = "sarmexin/papyrus"
         dockerImage = ''
+        containerName = 'papyrusapp'
+        dockerHubCredentials = 'admin'
+//        registry = "sarmexin/papyrus"
+//        registryCredential = 'dockerhub_id'
+//        dockerImage = ''
     }
 
     agent any
@@ -31,11 +35,16 @@ pipeline {
         stage('send image to dockerhub') {
             steps {
                 echo "==================== send image to dockerhub ===================="
-                script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push()
-                    }
+//                script {
+//                    docker.withRegistry('', registryCredential) {
+//                        dockerImage.push()
+//                    }
 //                sh "docker push sarmexin/papyrus"
+                // Use Jenkins credentials for Docker Hub login
+                withCredentials([usernamePassword(credentialsId: dockerHubCredentials, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+
+                    sh "docker push ${imagename}:latest"
                 }
             }
         }
