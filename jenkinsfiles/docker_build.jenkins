@@ -3,6 +3,12 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
+    environment {
+        registry = "sarmexin/papyrus"
+        registryCredential = 'dockerhub_id'
+        dockerImage = ''
+    }
+
     agent any
 
     options {
@@ -22,10 +28,15 @@ pipeline {
                 }
             }
         }
-        stage ('send image to dockerhub') {
+        stage('send image to dockerhub') {
             steps {
                 echo "==================== send image to dockerhub ===================="
-                sh "docker push sarmexin/papyrus"
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+//                sh "docker push sarmexin/papyrus"
+                }
             }
         }
         stage('create docker container') {
