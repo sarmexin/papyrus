@@ -32,7 +32,7 @@ pipeline {
             steps {
                 echo "==================== send image to dockerhub ===================="
                 // Публикуем образ в Docker Hub
-                docker.withRegistry('https://index.docker.io/v1/', 'srmexin', 'SPG322132###') {
+                docker.withRegistry('', registryCredential) {
                     docker.image('sarmexin/papyrus').push('latest')
                 }
             }
