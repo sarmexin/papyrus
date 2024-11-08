@@ -17,7 +17,7 @@ pipeline {
                 dir('/var/lib/jenkins/workspace/build_app') {
                     sh "docker kill papyrusapp"
                     sh "docker rm  papyrusapp"
-                    sh "docker rmi papyrus"
+                    sh "docker rmi sarmexin/papyrus"
                     sh "docker build . --tag sarmexin/papyrus:latest"
                 }
             }
