@@ -18,7 +18,7 @@ pipeline {
                     sh "docker kill papyrusapp"
                     sh "docker rm  papyrusapp"
                     sh "docker rmi papyrus"
-                    sh "docker build . --tag papyrus:latest"
+                    sh "docker build . --tag sarmexin/papyrus:latest"
                 }
                 echo "==================== end build image ===================="
             }
@@ -26,7 +26,7 @@ pipeline {
         stage('create docker container') {
             steps {
                 echo "==================== create docker container and run ==================== "
-                sh "docker run -d -p 8090:8090 --name papyrusapp papyrus:latest"
+                sh "docker run -d -p 8090:8090 --name papyrusapp sarmexin/papyrus:latest"
             }
         }
     }
