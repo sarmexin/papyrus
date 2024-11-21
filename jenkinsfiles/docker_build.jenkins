@@ -3,20 +3,46 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
-    agent {
-        label 'master'
+    environment {
+        registry = "sarmexin/papyrus"
+        registryCredential = 'dockerhub_id'
+        dockerImage = ''
     }
+
+    agent any
+
     options {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         timestamps()
     }
+
     stages {
         stage('create docker image') {
             steps {
-                echo "==================== start build image ===================="
-                dir ('docker/toolbox') {
-                    sh "docker build ."
+                echo "==================== start build docker image ===================="
+                dir('/var/lib/jenkins/workspace/build_app') {
+                    sh "docker kill papyrusapp || tru"
+                    sh "docker rm  papyrusapp || tru"
+                    sh "docker rmi sarmexin/papyrus || tru"
+                    sh "docker build . --tag sarmexin/papyrus:latest"
                 }
+            }
+        }
+        stage('send image to dockerhub') {
+            steps {
+                echo "==================== send image to dockerhub ===================="
+                script {
+                    // Публикуем образ в Docker Hub
+                    docker.withRegistry('', registryCredential) {
+                        docker.image('sarmexin/papyrus').push('latest')
+                    }
+                }
+            }
+        }
+        stage('create & start container on server') {
+            steps {
+                echo "==================== create & start container ==================== "
+                sh "docker run -d -p 8090:8090 --name papyrusapp sarmexin/papyrus:latest"
             }
         }
     }
