@@ -8,7 +8,7 @@ public class TestController {
 
     @GetMapping("/test")
     public Greeting test() throws InterruptedException {
-        Thread.sleep(500);
+        Thread.sleep(4000);
         return new Greeting(100L, "new text");
     }
 
