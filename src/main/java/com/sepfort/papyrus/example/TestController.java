@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @GetMapping("/test")
-    public Greeting test() {
+    public Greeting test() throws InterruptedException {
+        Thread.sleep(500);
         return new Greeting(100L, "new text");
     }
 
